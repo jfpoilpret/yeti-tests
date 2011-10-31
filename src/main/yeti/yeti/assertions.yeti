@@ -1,0 +1,41 @@
+module yeti.assertions;
+
+import java.lang.Throwable;
+import junit.framework.Assert;
+
+{
+	assert message expr is string -> boolean -> () =
+		Assert#assertTrue(message, expr),
+	
+	assertEquals message expected actual is string -> 'a -> 'a -> () =
+		Assert#assertEquals(message, expected, actual),
+		
+	assertEmpty message expr is string -> map<'a, 'b> -> () =
+		assert "\(message) should be empty" (empty? expr),
+	
+	assertNotEmpty message expr is string -> map<'a, 'b> -> () =
+		assert "\(message) should not be empty" (not empty? expr),
+	
+	fail message = Assert#fail(message),
+	
+/*
+	assertException message exception closure is string -> ~java.lang.Throwable -> (() -> ()) -> () =
+		try
+			closure();
+			Assert#fail(message)
+		catch Throwable e:
+			if not exception#getClass()#isInstance(e) then
+				Assert#fail(message)
+			fi
+		yrt
+*/
+	assertException message exception closure is string -> ~java.lang.Class -> (() -> ()) -> () =
+		try
+			closure();
+			Assert#fail(message)
+		catch Throwable e:
+			if not exception#isInstance(e) then
+				Assert#fail(message)
+			fi
+		yrt
+}

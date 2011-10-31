@@ -1,0 +1,19 @@
+module yeti.testtest;
+
+{suiteFromModule} = load yeti.testutils;
+load yeti.assertions;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+//TODO try to simplify do..done with lambdas)
+class YetiTestTest extends TestCase
+	static TestSuite suite()
+		suiteFromModule 
+		[	"test1" : \(), 
+			"test2" : \(assertException "fail" (classOf AssertionFailedError) \(fail "test12 must fail")),
+			"test3" : \(assert "true" true),
+			"test4" : \(assertEmpty "empty" []),
+			"test5" : \(assertEquals "1" 1 1)]
+end

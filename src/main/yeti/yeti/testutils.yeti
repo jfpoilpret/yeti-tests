@@ -1,0 +1,29 @@
+/// Unit Tests library for yeti modules
+
+module yeti.testutils;
+
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import yeti.lang.Fun;
+
+class YetiTest(String name, Fun test) extends TestCase(name)
+	void runTest()
+		(test#apply(());())
+end;
+
+addModuleToSuite suite module is ~TestSuite -> hash<string, () -> ()> -> () =
+	forHash module do k v: suite#addTest(new YetiTest(k, v)) done;
+
+suiteFromModules modules is list?<hash<string, () -> ()>> -> ~TestSuite =
+	(suite = new TestSuite();
+	 for modules do m: addModuleToSuite suite m done;
+	 suite);
+
+suiteFromModule module is hash<string, () -> ()> -> ~TestSuite =
+	suiteFromModules [module];
+
+	 
+{
+	suiteFromModule,
+	suiteFromModules
+}
